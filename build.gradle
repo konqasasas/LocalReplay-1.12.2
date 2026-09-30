@@ -1,0 +1,81 @@
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:4.0.13'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://jitpack.io' }
+}
+
+version = '0.1.0'
+group = 'com.konqasasas.localreplay'
+archivesBaseName = 'localreplay-1.12.2'
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+
+minecraft {
+    mappings channel: 'snapshot', version: '20171003-1.12'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            // ForgeGradle 4.x + Minecraft 1.12.2 userdev can inject Side.BUKKIT.
+            // ForgeSideFix removes that invalid side before Forge constructs its channels.
+            jvmArg "-Dfml.coreMods.load=me.theandrey.mods.sidefix.LoadingPlugin"
+
+            property 'forge.logging.console.level', 'info'
+        }
+    }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2859'
+
+    // Development-runtime-only fix for the 1.12.2 Side.BUKKIT crash.
+    // This is not packaged into Local Replay.
+    runtimeOnly 'com.github.RedServer:ForgeSideFix:1.12.2-1.0'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+processResources {
+    inputs.property 'version', project.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+            "Specification-Title"       : "Local Replay",
+            "Specification-Vendor"      : "konqasasas",
+            "Specification-Version"     : "${version}",
+            "Implementation-Title"      : "Local Replay",
+            "Implementation-Version"    : "${version}",
+            "Implementation-Vendor"     : "konqasasas",
+            "Implementation-Timestamp"  : new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')
