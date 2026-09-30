@@ -18,6 +18,8 @@ Minecraft Java Edition 1.12.2向けのクライアント側リプレイMODです
 
 ## 導入
 
+ダウンロードは[こちら](https://www.curseforge.com/minecraft/mc-mods/localreplay)か画面右のReleasesからお願いします。
+
 1. Minecraft Forge 1.12.2を導入します。
 2. `localreplay-1.12.2-0.1.0.jar`をMinecraftの`mods`フォルダーへ入れます。
 3. ワールドに入り、`G`キーでLocal Replayを開きます。
@@ -61,6 +63,12 @@ Local Replayは、実プレイヤーを録画地点へ移動させません。�
 - [Delay Mod](docs/DELAY_MOD.md)
 
 CYV／MPK系HUDは通常時と同様にF3表示中は非表示です。Delay Modは元MODの挙動に合わせ、F3表示中も表示されます。
+
+CYVのHUD設定はMinecraft起動時に読み込まれます。CYV側でHUDを変更した場合は、Local Replayの表示へ同期するためにMinecraftを一度再起動してください。
+
+## トラブルシューティング
+
+リプレイの表示後に地形が透明になった場合は、`F3` + `A`でチャンクを再読み込みしてください。
 
 ## リプレイファイル
 
